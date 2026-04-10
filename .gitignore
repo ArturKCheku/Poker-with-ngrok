@@ -2,4 +2,4 @@
 ngrok_recovery_codes.txt
 .prittierignore
 .prittierrc
-.node_modules
+node_modules/
