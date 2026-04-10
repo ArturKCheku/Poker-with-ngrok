@@ -1,0 +1,5 @@
+.env
+ngrok_recovery_codes.txt
+.prittierignore
+.prittierrc
+.node_modules

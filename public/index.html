@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="data:,">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Poker Multijugador</title>
+</head>
+
+<body>
+  <div id="initial-modal" class="modal">
+    <div class="modal-content">
+      <h2>Configuración de la Sala</h2>
+      <div id="create-room-section">
+        <p>Ingresa tu nombre:</p>
+        <input type="text" id="player-name" placeholder="Tu nombre" maxlength="20" />
+        <p>Establece el dinero inicial para todos los jugadores:</p>
+        <input type="number" id="initial-money" value="300" min="100" step="100" />
+        <button id="create-room-btn">Crear Sala</button>
+      </div>
+      <div class="join-room-section">
+        <h3>O únete a una sala existente</h3>
+        <p>Ingresa tu nombre:</p>
+        <input type="text" id="join-player-name" placeholder="Tu nombre" maxlength="20" />
+        <div class="join-room-input">
+          <input type="text" id="room-code-input" placeholder="Código de sala" maxlength="6" />
+          <button id="join-room-btn">Unirse</button>
+        </div>
+        <p>Ingresa el código de 6 dígitos proporcionado por el anfitrión</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="winner-modal" class="modal" style="display: none">
+    <div class="modal-content winner-modal-content">
+      <div class="modal-header">
+        <h2>🏆 Seleccionar Ganador(es)</h2>
+        <div class="pot-info">Bote total: <span class="pot-amount" id="pot-to-win">0</span></div>
+      </div>
+
+      <div class="modal-subtitle">
+        <span class="hint-icon">💡</span>
+        <span>Selecciona uno o más jugadores para dividir el bote</span>
+      </div>
+
+      <div class="winner-options" id="winner-options">
+        <!-- Las opciones de jugadores se generarán aquí -->
+      </div>
+
+      <div class="modal-footer">
+        <button id="cancel-winner" class="modal-btn cancel">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button id="confirm-winner" class="modal-btn confirm">
+          <i class="fas fa-check"></i> Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="waiting-winner-modal" class="modal" style="display: none">
+    <div class="modal-content">
+      <h2>?? Seleccionando Ganador</h2>
+      <div class="waiting-winner-info">
+        <div class="waiting-icon">?</div>
+        <div class="waiting-message">
+          <p>
+            El host <span id="host-name-waiting">[Host]</span> est�� seleccionando al ganador...
+          </p>
+          <p>Bote total: $<span id="waiting-pot-total">0</span></p>
+        </div>
+      </div>
+      <div class="loading-spinner"></div>
+      <p class="waiting-note">Por favor espera, la siguiente mano comenzar�� pronto</p>
+    </div>
+  </div>
+
+  <div id="round-modal" class="modal" style="display: none">
+    <div class="modal-content">
+      <h2 id="round-title">Nueva Ronda</h2>
+      <div class="round-info" id="round-info">
+        <div class="round-phase" id="round-phase">Preflop</div>
+        <div class="round-description" id="round-description">
+          Primera ronda de apuestas - Cartas iniciales
+        </div>
+      </div>
+      <button id="close-round-modal">Continuar</button>
+    </div>
+  </div>
+
+  <div class="container" id="main-game" style="display: none">
+    <header>
+      <h1>Poker Multijugador</h1>
+      <p class="subtitle">
+        Las ciegas se asignan automáticamente: Small Blind $10, Big Blind $20
+      </p>
+    </header>
+
+    <div class="waiting-screen" id="waiting-screen">
+      <div class="waiting-content">
+        <h2>🃏 Esperando Jugadores...</h2>
+        <p class="waiting-subtitle">
+          La partida comenzará automáticamente cuando se unan al menos
+          <strong>2 jugadores</strong>
+        </p>
+        <div class="players-needed" id="players-needed">1/6 jugadores</div>
+        <div class="room-code-display" id="room-code-display" style="display: none">
+          <h3 class="room-code-title">🔐 Código de Sala</h3>
+          <div class="room-code" id="room-code">XXXXXX</div>
+          <p class="share-instruction">
+            Comparte este código con otros jugadores para que se unan
+          </p>
+        </div>
+        <p class="max-players-note">
+          Máximo <strong>6 jugadores</strong>. Una vez que comience la partida, no se podrán unir
+          más.
+        </p>
+      </div>
+    </div>
+
+    <div class="main-game-area">
+      <section class="table-section">
+        <div class="poker-table">
+          <div class="player-info">
+            <div class="info-header">
+              <h2>🎯 Tu Información</h2>
+              <div class="player-status" id="player-status">ACTIVO</div>
+            </div>
+
+            <div class="stats-container">
+              <div class="main-stats">
+                <div class="stat-card chips-card">
+                  <div class="stat-icon">💰</div>
+                  <div class="stat-content">
+                    <div class="stat-label">FICHAS DISPONIBLES</div>
+                    <div class="stat-value" id="player-chips">280</div>
+                  </div>
+                  <div class="stat-glow"></div>
+                </div>
+
+                <div class="stat-card bet-card">
+                  <div class="stat-icon">📊</div>
+                  <div class="stat-content">
+                    <div class="stat-label">APUESTA ACTUAL</div>
+                    <div class="stat-value" id="player-bet">20</div>
+                  </div>
+                  <div class="stat-glow"></div>
+                </div>
+              </div>
+
+              <div class="blind-stats">
+                <div class="blind-card sb-card">
+                  <div class="blind-icon">🔹</div>
+                  <div class="blind-content">
+                    <div class="blind-label">SMALL BLIND</div>
+                    <div class="blind-value" id="current-small-blind">10</div>
+                  </div>
+                </div>
+
+                <div class="blind-card bb-card">
+                  <div class="blind-icon">🔸</div>
+                  <div class="blind-content">
+                    <div class="blind-label">BIG BLIND</div>
+                    <div class="blind-value" id="current-big-blind">20</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="action-indicator" id="action-indicator">
+              <div class="indicator-dot"></div>
+              <span>Es tu turno</span>
+            </div>
+          </div>
+
+          <div class="pot-display">
+            <h2>Bote Total</h2>
+            <div class="pot-amount">$<span id="pot-total">0</span></div>
+            <div class="current-bet" id="current-bet">
+              <h3>Apuesta a Igualar</h3>
+              <p>$<span id="current-bet-amount">0</span></p>
+            </div>
+          </div>
+
+          <div class="temp-bet-display" id="temp-bet-display" style="display: none">
+            <h3>Apuesta Temporal</h3>
+            <div class="temp-bet-amount">$<span id="temp-bet-value">0</span></div>
+            <div class="bet-confirmation">
+              <button class="betting-btn confirm-bet-btn" id="confirm-bet-btn">
+                Confirmar Apuesta
+              </button>
+              <button class="betting-btn cancel-bet-btn" id="cancel-bet-btn">Cancelar</button>
+            </div>
+          </div>
+
+          <div class="chips-container" id="chips-container">
+            <div class="chip chip-1" data-value="1">$1</div>
+            <div class="chip chip-5" data-value="5">$5</div>
+            <div class="chip chip-10" data-value="10">$10</div>
+            <div class="chip chip-25" data-value="25">$25</div>
+            <div class="chip chip-100" data-value="100">$100</div>
+            <div class="chip chip-500" data-value="500">$500</div>
+            <div class="all-in-btn" id="all-in-btn" style="display: none">All In</div>
+          </div>
+
+          <div class="betting-controls" id="betting-controls">
+            <div class="betting-buttons-container">
+              <button class="betting-btn fold-btn" id="fold-btn">Retirarse</button>
+              <button class="betting-btn check-btn" id="check-btn">Pasar</button>
+              <button class="betting-btn call-btn" id="call-btn">Igualar $0</button>
+            </div>
+          </div>
+
+          <button class="blind-btn" id="shuffle-players-btn" style="display: none;">
+            🔀 Mezclar jugadores
+          </button>
+
+          <div class="player-list" id="player-list"></div>
+        </div>
+      </section>
+
+      <section class="controls-section">
+        <div class="connection-status disconnected" id="connection-status">Desconectado</div>
+
+        <div class="room-info" id="room-info" style="display: none">
+          <h3>Información de la Sala</h3>
+          <div class="player-count" id="player-count">Jugadores: 0</div>
+          <div id="room-code-info">Código: -</div>
+        </div>
+
+        <div class="game-controls">
+          <button class="blind-btn start-game-btn" id="start-game-btn">Iniciar Partida</button>
+          <button class="blind-btn round-end-btn" id="round-end-btn" style="display: none">
+            Terminar Ronda
+          </button>
+          <button class="blind-btn leave-room-btn" id="leave-room-btn">Salir de la Sala</button>
+        </div>
+
+        <div class="chat-section">
+          <div class="chat-header">
+            <h2>Chat de la Partida</h2>
+            <div class="message-count">Tus mensajes: <span id="message-count">0</span>/3</div>
+          </div>
+          <div class="chat-messages" id="chat-messages">
+            <div class="message system">
+              <div class="message-header">
+                <span>Sistema</span>
+                <span>Ahora</span>
+              </div>
+              <div class="message-content">
+                Bienvenido a la sala de Poker. Esperando jugadores...
+              </div>
+            </div>
+          </div>
+          <div class="chat-input-container">
+            <div class="chat-input">
+              <input type="text" id="chat-input" placeholder="Escribe tu mensaje..." maxlength="20" />
+              <button id="send-message">Enviar</button>
+            </div>
+            <div class="chat-limits">
+              <div class="char-count" id="char-count">0/20</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/socket-init.js"></script>
+  <script src="js/!globals.js"></script>
+  <script src="js/dom.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/socket-events.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>

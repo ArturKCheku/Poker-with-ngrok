@@ -1,0 +1,35 @@
+{
+  "name": "poker-multiplayer",
+  "version": "1.0.0",
+  "description": "Servidor de Poker multijugador en tiempo real",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "nodemon src/server.js",
+    "tunnel": "ngrok http 3000",
+    "dev": "concurrently \"npm start\" \"npm run tunnel\"",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "poker",
+    "multiplayer",
+    "socket.io",
+    "express"
+  ],
+  "author": "Artur K. C.",
+  "license": "MIT",
+  "dependencies": {
+    "@ngrok/ngrok": "^1.7.0",
+    "dotenv": "^17.4.1",
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "ngrok": "latest",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
