@@ -62,16 +62,16 @@ Una vez ejecutado, verás en la consola:
 
 📂 Estructura del Proyecto
 
-├── public/              # Archivos estáticos (HTML, CSS, JS del cliente)
-│   ├── js/              # Lógica del frontend y Socket events
-│   └── css/             # Estilos de la mesa y componentes
-├── src/                 # Código fuente del servidor
-│   ├── config/          # Configuración de Socket.io y Ngrok
-│   ├── game/            # Lógica pura del juego (reglas, estados, baraja)
-│   ├── sockets/         # Handlers de eventos de red (actions, connections)
-│   └── server.js        # Punto de entrada de la aplicación
-├── .gitignore           # Archivos excluidos de Git (node_modules, .env)
-└── package.json         # Scripts y dependencias
+    ├── public/              # Archivos estáticos (HTML, CSS, JS del cliente)
+    │   ├── js/              # Lógica del frontend y Socket events
+    │   └── css/             # Estilos de la mesa y componentes
+    ├── src/                 # Código fuente del servidor
+    │   ├── config/          # Configuración de Socket.io y Ngrok
+    │   ├── game/            # Lógica pura del juego (reglas, estados, baraja)
+    │   ├── sockets/         # Handlers de eventos de red (actions, connections)
+    │   └── server.js        # Punto de entrada de la aplicación
+    ├── .gitignore           # Archivos excluidos de Git (node_modules, .env)
+    └── package.json         # Scripts y dependencias
 
 📝 Notas de Desarrollo
 
