@@ -31,28 +31,28 @@
 
 Sigue estos pasos para tener tu mesa de póker lista en menos de 2 minutos:
 
-  - Clona el repositorio:
+  1. Clona el repositorio:
 
-        git clone https://github.com/ArturKCheku/Poker-with-ngrok.git
-        cd Poker-with-ngrok
+          git clone https://github.com/ArturKCheku/Poker-with-ngrok.git
+          cd Poker-with-ngrok
 
-  - Instala las dependencias:
+  2. Instala las dependencias:
 
-        npm install
+          npm install
 
-  - Configura tu Token de Ngrok:
+  3. Configura tu Token de Ngrok:
     Crea un archivo .env en la raíz del proyecto y añade tu token de ngrok.com:
     Fragmento de código
 
-        NGROK_AUTHTOKEN=tu_token_aqui
-        PORT=3000
+          NGROK_AUTHTOKEN=tu_token_aqui
+          PORT=3000
 
-🎮 Cómo Jugar
+🎮 Cómo Jugar?
 
 Para arrancar tanto el servidor como el túnel público al mismo tiempo, ejecuta:
 Bash
 
-npm run dev
+    npm run dev
 
 Una vez ejecutado, verás en la consola:
 
